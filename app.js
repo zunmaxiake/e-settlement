@@ -4,15 +4,28 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var ejs = require('ejs');
+var Promise = require('bluebird');
+var CONFIG = require("./config/CONFIG")
+var Sequelize = require('sequelize');
+var tedious = require('tedious');
+
+var dataBase = CONFIG.SQLSERVER.dataBase;
+var userName = CONFIG.SQLSERVER.userName;
+var password = CONFIG.SQLSERVER.pwd;
+var baseConfig = CONFIG.SQLSERVER.baseConfig;
+global.sequelize = new Sequelize(dataBase,userName,password,baseConfig);
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var member = require('./routes/member');
+var template = require('./routes/template');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.engine('.ejs',ejs.__express);
+app.set('view engine','ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -23,7 +36,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/member',member);
+app.use('/template', template);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
