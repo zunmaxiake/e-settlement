@@ -22,7 +22,7 @@ var template = require('./routes/template');
 
 var app = express();
 
-// view engine setup
+// view engine setup2
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.ejs',ejs.__express);
 app.set('view engine','ejs');
